@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { Container, Grid, Button, Typography } from "@mui/material";
+import Cartao from "./components/cartao";
 
-function App() {
+const App2 = () => {
+  const [dados, setDados] = useState([]);
+
+  const buscarDados = async () => {
+    try {
+      const resposta = await axios.get(
+        "https://rickandmortyapi.com/api/character/?page=1"
+      );
+      setDados(resposta.data.results);
+    } catch (erro) {
+      console.error("Erro ao buscar os dados:", erro);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container sx={{ textAlign: "center", padding: 3 }}>
+      <Typography variant="h4">Rick and Morty</Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={buscarDados}
+        sx={{ marginBottom: 3 }}
+      >
+        Buscar Personagens
+      </Button>
+      <Grid container spacing={3}>
+        {dados.map((personagem) => (
+          <Grid item key={personagem.id}>
+            <Cartao personagem={personagem} />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
-}
+};
 
-export default App;
+export default App2;
